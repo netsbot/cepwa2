@@ -1,37 +1,61 @@
 import './style.css'
 import p5 from "p5"
 
-import Object from "./lib/object.ts";
+import Wolf from "./lib/mesopredators/wolf.ts";
+import Deer from "./lib/preys/deer.ts";
+import ObjectManager from "./lib/objectManager.ts";
+import Prey from "./lib/animals/prey.ts";
+import Predator from "./lib/animals/predator.ts";
+import Animal from "./lib/animals/animal.ts";
 
 let main = (p: p5) => {
-    let objects: Object[] = [];
+    let objectManager: ObjectManager = new ObjectManager();
+    Animal.objectManager = objectManager;
+    Deer.predatorChoices = [Wolf];
+    Wolf.preyChoices = [Deer];
+
     p.setup = () => {
         p.createCanvas(600, 600);
 
-        for (let i = 0; i < 3; i++) {
-            let position = p.createVector(p.random(0, p.width), p.random(0, p.height));
-            let velocity = p5.Vector.random2D()
-            let acceleration = p.createVector(0, 0);
-            let mass = p.random(1, 5);
-
-            objects.push(new Object(p, position, velocity, acceleration, mass));
-        }
-
+        objectManager.addAnimal(new Wolf(p, p.createVector(300, 300)));
+        objectManager.addAnimal(new Deer(p, p.createVector(100, 100)));
+        objectManager.addAnimal(new Deer(p, p.createVector(300, 100)));
     }
 
     p.draw = () => {
-        p.background(220);
+        p.background(255);
 
-        let averageObjectPosition = p.createVector(0, 0);
-        for (let object of objects) {
-            object.applyGravity(objects);
-            object.loop()
-            averageObjectPosition.add(object.position);
+        let predators = objectManager.predators;
+        let preys = objectManager.preys;
+
+        for (let species of predators) {
+            let animals = species[1];
+            let availablePreys: Prey[] = [];
+
+            for (let preySpecies of species[0].preyChoices) {
+                availablePreys.push(...objectManager.getAnimalsFromSpecies(preySpecies));
+            }
+
+            for (let animal of animals) {
+                animal.update({availablePreys: availablePreys});
+                animal.view();
+            }
         }
-        averageObjectPosition.div(objects.length);
 
-        p.translate(p.width / 2 - averageObjectPosition.x, p.height / 2 - averageObjectPosition.y);
+        for (let species of preys) {
+            let animals = species[1];
 
+            let availablePredators: Predator[] = [];
+
+            for (let predatorSpecies of species[0].predatorChoices) {
+                availablePredators.push(...objectManager.getAnimalsFromSpecies(predatorSpecies));
+            }
+
+            for (let animal of animals) {
+                animal.update({availablePredators: availablePredators});
+                animal.view();
+            }
+        }
     }
 }
 
