@@ -1,61 +1,50 @@
 import './style.css'
-import p5 from "p5"
+import p5 from 'p5';
 
-import Wolf from "./lib/mesopredators/wolf.ts";
-import Deer from "./lib/preys/deer.ts";
-import ObjectManager from "./lib/objectManager.ts";
-import Prey from "./lib/animals/prey.ts";
-import Predator from "./lib/animals/predator.ts";
-import Animal from "./lib/animals/animal.ts";
+import {World} from "@lastolivegames/becsy";
+import {DeerBuilder} from "./animals/Deer.ts";
 
-let main = (p: p5) => {
-    let objectManager: ObjectManager = new ObjectManager();
-    Animal.objectManager = objectManager;
-    Deer.predatorChoices = [Wolf];
-    Wolf.preyChoices = [Deer];
+import {MovementSystem} from "./systems/MovementSystem.ts";
+import {RenderSystem} from "./systems/RenderSystem.ts";
+import {WolfBuilder} from "./animals/Wolf.ts";
+import {HuntingSystem} from "./systems/HuntingSystem.ts";
+import {DeleterSystem} from "./systems/DeleterSystem.ts";
+import {LionBuilder} from "./animals/Lion.ts";
 
-    p.setup = () => {
+let main = async (p: p5) => {
+    const world = await World.create({
+        defs: [
+            HuntingSystem,
+            DeleterSystem,
+            MovementSystem,
+            RenderSystem, {p: p},
+        ]
+    });
+
+    const deerBuilder = new DeerBuilder(world);
+    const wolfBuilder = new WolfBuilder(world);
+    const lionBuilder = new LionBuilder(world);
+
+    p.setup = async () => {
         p.createCanvas(600, 600);
 
-        objectManager.addAnimal(new Wolf(p, p.createVector(300, 300)));
-        objectManager.addAnimal(new Deer(p, p.createVector(100, 100)));
-        objectManager.addAnimal(new Deer(p, p.createVector(300, 100)));
+        for (let i = 0; i < 10; i++) {
+            deerBuilder.create([Math.random() * p.width, Math.random() * p.height]);
+        }
+
+        for (let i = 0; i < 10; i++) {
+            wolfBuilder.create([Math.random() * p.width, Math.random() * p.height]);
+        }
+
+        for (let i = 0; i < 1; i++) {
+            lionBuilder.create([Math.random() * p.width, Math.random() * p.height]);
+        }
     }
 
-    p.draw = () => {
-        p.background(255);
+    p.draw = async () => {
+        p.background(220);
 
-        let predators = objectManager.predators;
-        let preys = objectManager.preys;
-
-        for (let species of predators) {
-            let animals = species[1];
-            let availablePreys: Prey[] = [];
-
-            for (let preySpecies of species[0].preyChoices) {
-                availablePreys.push(...objectManager.getAnimalsFromSpecies(preySpecies));
-            }
-
-            for (let animal of animals) {
-                animal.update({availablePreys: availablePreys});
-                animal.view();
-            }
-        }
-
-        for (let species of preys) {
-            let animals = species[1];
-
-            let availablePredators: Predator[] = [];
-
-            for (let predatorSpecies of species[0].predatorChoices) {
-                availablePredators.push(...objectManager.getAnimalsFromSpecies(predatorSpecies));
-            }
-
-            for (let animal of animals) {
-                animal.update({availablePredators: availablePredators});
-                animal.view();
-            }
-        }
+        await world.execute()
     }
 }
 
