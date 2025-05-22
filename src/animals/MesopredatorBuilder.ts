@@ -6,16 +6,18 @@ import {Prey} from "../components/Prey.ts";
 import {MaxSpeed} from "../components/MaxSpeed.ts";
 import {Renderable} from "../components/Viewable.ts";
 import {Predator} from "../components/Predator.ts";
+import {Acceleration} from "../components/Acceleration.ts";
+import {TargetPosition} from "../components/TargetPosition.ts";
 
 export default abstract class MesopredatorBuilder {
     protected world: World;
 
     protected abstract huntDistance: number;
-    protected abstract preyDetectChance: number ;
+    protected abstract preyDetectChance: number;
 
     protected abstract fleeDistance: number;
-    protected abstract predatorDetectChance: number ;
 
+    protected abstract acceleration: number;
     protected abstract maxSpeed: number;
     protected abstract color: number[];
     protected abstract Component: any;
@@ -32,17 +34,16 @@ export default abstract class MesopredatorBuilder {
         this.world.createEntity(
             Position, {value: tempVector},
             Velocity, {value: [0, 0]},
+            TargetPosition, {value: [NaN, NaN]},
             Prey, {
                 fleeDistance: this.fleeDistance,
-                predatorDetectChance: this.predatorDetectChance,
-                target: null
             },
             Predator, {
                 huntDistance: this.huntDistance,
                 preyDetectChance: this.preyDetectChance,
-                target: null
             },
             MaxSpeed, {value: this.maxSpeed},
+            Acceleration, {value: this.acceleration},
             Renderable, {color: this.color},
             this.Component
         );

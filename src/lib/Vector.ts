@@ -1,12 +1,17 @@
 import {Type} from "@lastolivegames/becsy";
 
 export class Vector {
-    x: number = NaN;
-    y: number = NaN;
+    x: number = 0;
+    y: number = 0;
 
     add(that: Vector): void {
         this.x += that.x;
         this.y += that.y;
+    }
+
+    addScalar(scalar: number): void {
+        this.x += scalar;
+        this.y += scalar;
     }
 
     sub(that: Vector): void {
@@ -14,9 +19,14 @@ export class Vector {
         this.y -= that.y;
     }
 
-    mult(scalar: number): void {
+    multScalar(scalar: number): void {
         this.x *= scalar;
         this.y *= scalar;
+    }
+
+    mult(that: Vector): void {
+        this.x *= that.x;
+        this.y *= that.y;
     }
 
     div(scalar: number): void {
@@ -28,7 +38,7 @@ export class Vector {
         const length = this.mag();
         if (length > max) {
             this.normalize();
-            this.mult(max);
+            this.multScalar(max);
         }
     }
 
@@ -60,7 +70,7 @@ export class Vector {
         const length = this.mag();
         if (length > 0) {
             this.div(length);
-            this.mult(magnitude);
+            this.multScalar(magnitude);
         } else {
             this.x = magnitude;
             this.y = 0;

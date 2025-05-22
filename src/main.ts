@@ -28,17 +28,22 @@ let main = async (p: p5) => {
     p.setup = async () => {
         p.createCanvas(600, 600);
 
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 20; i++) {
             deerBuilder.create([Math.random() * p.width, Math.random() * p.height]);
         }
 
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 5; i++) {
             wolfBuilder.create([Math.random() * p.width, Math.random() * p.height]);
         }
 
         for (let i = 0; i < 1; i++) {
             lionBuilder.create([Math.random() * p.width, Math.random() * p.height]);
         }
+
+        // deerBuilder.create([300, 300]);
+        // wolfBuilder.create([300, 500]);
+        // wolfBuilder.create([400, 400]);
+        // lionBuilder.create([200, 400]);
     }
 
     p.draw = async () => {

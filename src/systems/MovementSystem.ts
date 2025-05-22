@@ -3,23 +3,51 @@ import {Velocity} from "../components/Velocity.ts";
 import {Position} from "../components/Position.ts";
 import {MaxSpeed} from "../components/MaxSpeed.ts";
 import {DeleterSystem} from "./DeleterSystem.ts";
+import {TargetPosition} from "../components/TargetPosition.ts";
+import {Acceleration} from "../components/Acceleration.ts";
 
 @system(s => s.after(DeleterSystem)) export class MovementSystem extends System{
-    private entities = this.query(
-        q => q.current.with(Velocity, MaxSpeed).and.with(Position).write
+    private targetPositionEntities = this.query(
+        q => q.current.with(TargetPosition, Acceleration).and.with(Position, Velocity).write
     )
+
+    private entitiesWithMaxSpeed = this.query(q => q.current.with(MaxSpeed).with(Position, Velocity).write);
 
     private entitiesWithoutMaxSpeed = this.query(q => q.current.without(MaxSpeed).and.with(Velocity).and.with(Position).write);
 
     execute() {
-        for (const entity of this.entities.current) {
-            const velocity = entity.read(Velocity).value.copy();
+        for (const entity of this.targetPositionEntities.current) {
+            const targetPosition = entity.read(TargetPosition).value;
+
+            if (isNaN(targetPosition.x)) continue;
+
+            let velocity = entity.write(Velocity);
+            const acceleration = entity.read(Acceleration).value;
+            const position = entity.write(Position).value;
+
+            const direction= targetPosition.copy();
+            direction.sub(position);
+
+            if (direction.mag() < 5) {
+                velocity.value.multScalar(0);
+            } else {
+                direction.normalize();
+                direction.multScalar(velocity.value.mag() + acceleration);
+
+                velocity.value = direction;
+            }
+        }
+
+        for (const entity of this.entitiesWithMaxSpeed.current) {
+            const velocity = entity.write(Velocity).value;
             const maxSpeed = entity.read(MaxSpeed).value;
-            const position = entity.write(Position);
+            const position = entity.write(Position).value;
 
-            velocity.limit(maxSpeed);
+            velocity.limit(2);
+            // velocity.multScalar(this.delta)
 
-            position.value.add(velocity);
+
+            position.add(velocity);
         }
 
         for (const entity of this.entitiesWithoutMaxSpeed.current) {

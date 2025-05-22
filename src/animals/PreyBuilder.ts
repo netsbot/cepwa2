@@ -5,14 +5,16 @@ import {Velocity} from "../components/Velocity.ts";
 import {Prey} from "../components/Prey.ts";
 import {MaxSpeed} from "../components/MaxSpeed.ts";
 import {Renderable} from "../components/Viewable.ts";
+import {Acceleration} from "../components/Acceleration.ts";
+import {TargetPosition} from "../components/TargetPosition.ts";
 
 export default abstract class PreyBuilder {
     protected world: World;
 
     protected abstract fleeDistance: number;
-    protected abstract predatorDetectChance: number ;
-    protected abstract maxSpeed: number;
 
+    protected abstract acceleration: number;
+    protected abstract maxSpeed: number;
     protected abstract color: number[];
     protected abstract Component: any;
 
@@ -28,12 +30,12 @@ export default abstract class PreyBuilder {
         this.world.createEntity(
             Position, {value: tempVector},
             Velocity, {value: [0, 0]},
+            TargetPosition, {value: [NaN, NaN]},
             Prey, {
                 fleeDistance: this.fleeDistance,
-                predatorDetectChance: this.predatorDetectChance,
-                target: null
             },
             MaxSpeed, {value: this.maxSpeed},
+            Acceleration, {value: this.acceleration},
             Renderable, {color: this.color},
             this.Component
         );
