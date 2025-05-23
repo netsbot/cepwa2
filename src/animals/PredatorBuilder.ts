@@ -7,12 +7,13 @@ import {Renderable} from "../components/Viewable.ts";
 import {Predator} from "../components/Predator.ts";
 import {Acceleration} from "../components/Acceleration.ts";
 import {TargetPosition} from "../components/TargetPosition.ts";
+import {Reproduce} from "../components/Reproduce.ts";
+import {Decision} from "../components/Decision.ts";
 
 export default abstract class PredatorBuilder {
     protected world: World;
 
     protected abstract huntDistance: number;
-    protected abstract preyDetectChance: number;
 
     protected abstract acceleration: number;
     protected abstract maxSpeed: number;
@@ -33,9 +34,11 @@ export default abstract class PredatorBuilder {
             Velocity, {value: [0, 0]},
             TargetPosition, {value: [NaN, NaN]},
             Predator, {
+                hunting: false,
                 huntDistance: this.huntDistance,
-                preyDetectChance: this.preyDetectChance,
             },
+            Reproduce, {reproducing: false, energyCost: 0},
+            Decision, {free: true, feedChance: 0.5, reproduceChance: 0.5},
             MaxSpeed, {value: this.maxSpeed},
             Acceleration, {value: this.acceleration},
             Renderable, {color: this.color},

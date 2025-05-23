@@ -7,6 +7,8 @@ import {MaxSpeed} from "../components/MaxSpeed.ts";
 import {Renderable} from "../components/Viewable.ts";
 import {Acceleration} from "../components/Acceleration.ts";
 import {TargetPosition} from "../components/TargetPosition.ts";
+import {Reproduce} from "../components/Reproduce.ts";
+import {Decision} from "../components/Decision.ts";
 
 export default abstract class PreyBuilder {
     protected world: World;
@@ -34,6 +36,8 @@ export default abstract class PreyBuilder {
             Prey, {
                 fleeDistance: this.fleeDistance,
             },
+            Reproduce, {reproducing: false, energyCost: 0},
+            Decision, {free: true, feedChance: 0.5, reproduceChance: 0.5},
             MaxSpeed, {value: this.maxSpeed},
             Acceleration, {value: this.acceleration},
             Renderable, {color: this.color},

@@ -8,7 +8,7 @@ import {Acceleration} from "../components/Acceleration.ts";
 
 @system(s => s.after(DeleterSystem)) export class MovementSystem extends System{
     private targetPositionEntities = this.query(
-        q => q.current.with(TargetPosition, Acceleration).and.with(Position, Velocity).write
+        q => q.current.with(Acceleration, Position).and.with(Velocity, TargetPosition).write
     )
 
     private entitiesWithMaxSpeed = this.query(q => q.current.with(MaxSpeed).with(Position, Velocity).write);
@@ -17,22 +17,23 @@ import {Acceleration} from "../components/Acceleration.ts";
 
     execute() {
         for (const entity of this.targetPositionEntities.current) {
-            const targetPosition = entity.read(TargetPosition).value;
+            const targetPosition = entity.write(TargetPosition);
 
-            if (isNaN(targetPosition.x)) continue;
+            if (isNaN(targetPosition.value.x)) continue;
 
             let velocity = entity.write(Velocity);
             const acceleration = entity.read(Acceleration).value;
-            const position = entity.write(Position).value;
+            const position = entity.read(Position).value;
 
-            const direction= targetPosition.copy();
+            const direction= targetPosition.value.copy();
             direction.sub(position);
 
             if (direction.mag() < 5) {
                 velocity.value.multScalar(0);
             } else {
+                targetPosition.speed += acceleration;
                 direction.normalize();
-                direction.multScalar(velocity.value.mag() + acceleration);
+                direction.multScalar(targetPosition.speed);
 
                 velocity.value = direction;
             }
@@ -43,8 +44,8 @@ import {Acceleration} from "../components/Acceleration.ts";
             const maxSpeed = entity.read(MaxSpeed).value;
             const position = entity.write(Position).value;
 
-            velocity.limit(2);
-            // velocity.multScalar(this.delta)
+            velocity.limit(maxSpeed);
+            velocity.multScalar(this.delta)
 
 
             position.add(velocity);

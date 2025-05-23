@@ -1,5 +1,5 @@
-import {System, system} from "@lastolivegames/becsy";
 import p5 from "p5";
+import {System, system} from "@lastolivegames/becsy";
 import {Renderable} from "../components/Viewable.ts";
 import {Position} from "../components/Position.ts";
 

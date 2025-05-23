@@ -7,16 +7,23 @@ import {DeerBuilder} from "./animals/Deer.ts";
 import {MovementSystem} from "./systems/MovementSystem.ts";
 import {RenderSystem} from "./systems/RenderSystem.ts";
 import {WolfBuilder} from "./animals/Wolf.ts";
-import {HuntingSystem} from "./systems/HuntingSystem.ts";
+import {PredatorSystem} from "./systems/PredatorSystem.ts";
 import {DeleterSystem} from "./systems/DeleterSystem.ts";
 import {LionBuilder} from "./animals/Lion.ts";
+import {CameraControlSystem} from "./systems/CameraControlSystem.ts";
+import {Prey} from "./components/Prey.ts";
+import {PreySystem} from "./systems/PreySystem.ts";
+import {DecisionSystem} from "./systems/DecisionSystem.ts";
 
 let main = async (p: p5) => {
     const world = await World.create({
         defs: [
-            HuntingSystem,
+            DecisionSystem,
+            PredatorSystem,
+            PreySystem,
             DeleterSystem,
             MovementSystem,
+            CameraControlSystem,
             RenderSystem, {p: p},
         ]
     });
@@ -26,7 +33,8 @@ let main = async (p: p5) => {
     const lionBuilder = new LionBuilder(world);
 
     p.setup = async () => {
-        p.createCanvas(600, 600);
+        let canvas = p.createCanvas(600, 600);
+        canvas.parent("app");
 
         for (let i = 0; i < 20; i++) {
             deerBuilder.create([Math.random() * p.width, Math.random() * p.height]);
