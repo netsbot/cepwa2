@@ -5,7 +5,7 @@ import {TargetPosition} from "../components/TargetPosition.ts";
 import {ToBeDeleted} from "../components/ToBeDeleted.ts";
 import {Prey} from "../components/Prey.ts";
 import {Grass} from "../environment/Grass.ts";
-import {Deer} from "../animals/Deer.ts";
+import {Chick} from "../animals/Chick.ts";
 import {Vegetation} from "../components/Vegetation.ts";
 import {HuntingSystem} from "./HuntingSystem.ts";
 
@@ -13,7 +13,7 @@ import {HuntingSystem} from "./HuntingSystem.ts";
 export class GrazingSystem extends System {
     private relationships = new Map<ComponentType<any>, ComponentType<any>[]>(
         [
-            [Deer, [Grass]],
+            [Chick, [Grass]],
         ]
     );
 

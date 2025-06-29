@@ -5,9 +5,72 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + TS</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+          Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        margin: 0;
+        padding: 1em;
+        background-color: #f0f0f0;
+      }
+
+      
+      #controls {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+        max-width: 350px;
+        margin-bottom: 1em;
+      }
+      #controls label {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+        font-size: 1rem;
+      }
+      #controls input[type="range"] {
+        flex: 1 1 120px;
+        margin-left: 2em; /* Tab effect */
+      }
+      #controls span {
+        min-width: 2em;
+        text-align: right;
+        display: inline-block;
+      }
+    </style>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="layout" style="display: flex; flex-direction: row; align-items: flex-start;">
+      <div id="controls">
+        <label>
+          Seed:
+          <input type="text" id="seed-input" value="" style="margin-left:2em; width: 8em;" />
+        </label>
+        <label>
+          Pigs:
+          <input type="range" id="pigs-slider" min="0" max="100" value="5" />
+          <span id="pigs-value">5</span>
+        </label>
+        <label>
+          Wolves:
+          <input type="range" id="wolves-slider" min="0" max="20" value="1" />
+          <span id="wolves-value">1</span>
+        </label>
+        <label>
+          Chicks:
+          <input type="range" id="chicks-slider" min="0" max="200" value="20" />
+          <span id="chicks-value">20</span>
+        </label>
+        <label>
+          Grass:
+          <input type="range" id="grass-slider" min="0" max="200" value="50" />
+          <span id="grass-value">50</span>
+        </label>
+        <button id="start-btn" style="margin-bottom:1em;">Start Simulation</button>
+        <button id="stop-btn" style="margin-bottom:1em;">Stop Simulation</button>
+      </div>
+      <div id="app" style="flex: 1 1 auto; margin-left: 2em;"></div>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

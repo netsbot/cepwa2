@@ -1,20 +1,16 @@
 import {component} from "@lastolivegames/becsy";
-import MesopredatorBuilder from "./MesopredatorBuilder.ts";
+import PredatorBuilder from "./PredatorBuilder.ts";
 
 @component export class Wolf {}
 
-export class WolfBuilder extends MesopredatorBuilder {
-    protected huntDistance = 500;
-
-    protected fleeDistance = 500;
-    protected grazingDistance = 500;
+export class WolfBuilder extends PredatorBuilder {
+    protected huntDistance = 1000;
 
     protected startingEnergy = 5;
-    protected energyLoss = 0.001;
-    protected energyValue = 3;
+    protected energyLoss = 0.0005;
 
     protected acceleration = 5;
-    protected maxSpeed = 40;
-    protected color = [0, 255, 0];
+    protected maxSpeed = 50;
+    protected color = [0, 0, 255];
     protected Component = Wolf;
 }

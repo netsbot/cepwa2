@@ -8,8 +8,8 @@ import {ToBeDeleted} from "../components/ToBeDeleted.ts";
     execute() {
         for (const entity of this.energyQuery.current) {
             const energy = entity.read(Energy);
-            if (energy.value <= 0) {
-                entity.write(ToBeDeleted);
+            if (energy.value <= 0.05) {
+                entity.add(ToBeDeleted);
             }
         }
     }

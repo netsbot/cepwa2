@@ -1,7 +1,7 @@
 import {ComponentType, World} from "@lastolivegames/becsy";
 import {Vegetation} from "../components/Vegetation.ts";
 import {Position} from "../components/Position.ts";
-import {BoxView} from "../components/BoxVIew.ts";
+import {SpriteView} from "../components/SpriteView.ts";
 
 export abstract class VegetationBuilder {
     protected world: World;
@@ -20,7 +20,7 @@ export abstract class VegetationBuilder {
         this.world.createEntity(
             Vegetation, {energyValue: this.energyValue},
             Position, {value: position},
-            BoxView, {color: this.color, width: 10, height: 10},
+            SpriteView, {value: this.Component.name.toLowerCase(), width: 32},
             this.Component
         );
     }

@@ -5,21 +5,30 @@ import {Energy} from "../components/Energy.ts";
 import {Vector} from "../lib/Vector.ts";
 import {HuntingSystem} from "./HuntingSystem.ts";
 import {GrazingSystem} from "./GrazingSystem.ts";
+import {RNG} from "../lib/RNG.ts";
 
 @system(s => s.before(HuntingSystem, GrazingSystem))
 export class WanderSystem extends System {
     private allAnimalsQuery = this.query(q => q.current.with(Position, Energy).with(TargetPosition).write);
+    private lastWanderTime = 0;
 
     execute() {
+        let changedWanderTime = false;
+
         for (const entity of this.allAnimalsQuery.current) {
-            if (entity.read(Energy).value < entity.read(Energy).startingValue * 0.3)
+            if (entity.read(Energy).value < entity.read(Energy).startingValue)
                 continue;
 
-            if (isNaN(entity.read(TargetPosition).value.x)) {
+            if (this.lastWanderTime + 2 < this.time) {
                 const position = entity.read(Position).value;
-                const wanderOffset = [(Math.round(Math.random()) * 2 - 1) * 100, (Math.round(Math.random()) * 2 - 1) * 100];
+                const wanderOffset = [RNG.nextInt(-100, 100), RNG.nextInt(-100, 100)];
                 entity.write(TargetPosition).value = new Vector(position.x + wanderOffset[0], position.y + wanderOffset[1]);
+                changedWanderTime = true;
             }
+        }
+
+        if (changedWanderTime) {
+            this.lastWanderTime = this.time;
         }
     }
 }

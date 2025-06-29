@@ -4,11 +4,11 @@ import {Position} from "../components/Position.ts";
 import {Velocity} from "../components/Velocity.ts";
 import {Prey} from "../components/Prey.ts";
 import {MaxSpeed} from "../components/MaxSpeed.ts";
-import {DotView} from "../components/DotView.ts";
 import {Predator} from "../components/Predator.ts";
 import {Acceleration} from "../components/Acceleration.ts";
 import {TargetPosition} from "../components/TargetPosition.ts";
 import {Energy} from "../components/Energy.ts";
+import {SpriteView} from "../components/SpriteView.ts";
 
 export default abstract class MesopredatorBuilder {
     protected world: World;
@@ -52,7 +52,7 @@ export default abstract class MesopredatorBuilder {
             MaxSpeed, {value: this.maxSpeed},
             Energy, {value: this.startingEnergy, startingValue: this.startingEnergy, lossPerMovement: this.energyLoss},
             Acceleration, {value: this.acceleration},
-            DotView, {color: this.color},
+            SpriteView, {value: this.Component.name.toLowerCase(), width: 32},
             this.Component
         );
     }

@@ -4,17 +4,35 @@ import {DotView} from "../components/DotView.ts";
 import {Position} from "../components/Position.ts";
 import {BoxView} from "../components/BoxVIew.ts";
 import {DeleterSystem} from "./DeleterSystem.ts";
+import {SpriteView} from "../components/SpriteView.ts";
 
 
 @system(s => s.after(DeleterSystem)) export class RenderSystem extends System {
     static p: p5;
 
     private zoom = 0.75;
-    private cameraX = 0;
-    private cameraY = 0;
+    private cameraX = 350
+    private cameraY = 360;
 
     private dotViews = this.query(q => q.current.with(DotView, Position))
     private boxViews = this.query(q => q.current.with(BoxView, Position));
+    private spriteViews = this.query(q => q.current.with(SpriteView, Position));
+
+    static assetsToLoad = new Map<string, string>([
+        ["grass", "/assets/grass.png"],
+        ["chick", "/assets/chick.png"],
+        ["pig", "/assets/pig.png"],
+        ["wolf", "/assets/wolf.png"],
+    ]);
+
+    static loadedAssets = new Map<string, p5.Image>();
+
+    static async loadAssets() {
+        for (const [name, path] of this.assetsToLoad.entries()) {
+            const image = await RenderSystem.p.loadImage(path);
+            this.loadedAssets.set(name, image);
+        }
+    }
 
     initialize() {
         console.log("CameraControlSystem initialized");
@@ -77,6 +95,21 @@ import {DeleterSystem} from "./DeleterSystem.ts";
         }
     }
 
+    renderSpriteViews() {
+        for (const entity of this.spriteViews.current) {
+            const sprite = entity.read(SpriteView);
+            const position = entity.read(Position);
+
+            const image = RenderSystem.loadedAssets.get(sprite.value);
+            if (image) {
+                RenderSystem.p.push();
+                RenderSystem.p.imageMode(RenderSystem.p.CENTER);
+                RenderSystem.p.image(image, position.value.x, position.value.y, sprite.width, sprite.width);
+                RenderSystem.p.pop();
+            }
+        }
+    }
+
 
     execute() {
         RenderSystem.p.translate(this.cameraX, this.cameraY);
@@ -84,5 +117,6 @@ import {DeleterSystem} from "./DeleterSystem.ts";
 
         this.renderDotViews();
         this.renderBoxViews();
+        this.renderSpriteViews();
     }
 }

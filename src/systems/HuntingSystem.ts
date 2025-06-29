@@ -5,16 +5,16 @@ import {Position} from "../components/Position.ts";
 import {TargetPosition} from "../components/TargetPosition.ts";
 import {ToBeDeleted} from "../components/ToBeDeleted.ts";
 import {Prey} from "../components/Prey.ts";
-import {Lion} from "../animals/Lion.ts";
+import {Pig} from "../animals/Pig.ts";
+import {Chick} from "../animals/Chick.ts";
 import {Wolf} from "../animals/Wolf.ts";
-import {Deer} from "../animals/Deer.ts";
 
 @system
 export class HuntingSystem extends System {
     private relationships = new Map<ComponentType<any>, ComponentType<any>[]>(
         [
-            [Lion, [Wolf, Deer]],
-            [Wolf, [Deer]]
+            [Wolf, [Pig, Chick]],
+            [Pig, [Chick]]
         ]
     );
 
@@ -66,11 +66,7 @@ export class HuntingSystem extends System {
                     const distanceToPrey = predatorPos.dist(closestPrey.read(Position).value);
 
                     if (distanceToPrey < 5) {
-                        try {
-                            closestPrey.add(ToBeDeleted); // Remove the prey entity
-                        } catch (e) {
-                            return; // Exit if deletion fails
-                        }
+                        closestPrey.add(ToBeDeleted); // Remove the prey entity
 
                         predatorEnergy.value += closestPrey.read(Prey).energyValue; // Gain energy from the prey
 
