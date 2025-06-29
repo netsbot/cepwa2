@@ -2,7 +2,7 @@ import p5 from "p5";
 import {System, system} from "@lastolivegames/becsy";
 import {DotView} from "../components/DotView.ts";
 import {Position} from "../components/Position.ts";
-import {BoxView} from "../components/BoxVIew.ts";
+import {BoxView} from "../components/BoxView.ts";
 import {DeleterSystem} from "./DeleterSystem.ts";
 import {SpriteView} from "../components/SpriteView.ts";
 
