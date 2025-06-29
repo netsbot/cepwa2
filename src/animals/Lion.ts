@@ -4,8 +4,10 @@ import PredatorBuilder from "./PredatorBuilder.ts";
 @component export class Lion {}
 
 export class LionBuilder extends PredatorBuilder {
-    protected huntDistance = 500;
-    protected preyDetectChance = 0.5;
+    protected huntDistance = 1000;
+
+    protected startingEnergy = 10;
+    protected energyLoss = 0.0005;
 
     protected acceleration = 5;
     protected maxSpeed = 50;

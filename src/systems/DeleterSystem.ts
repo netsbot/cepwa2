@@ -1,8 +1,9 @@
 import {system, System} from "@lastolivegames/becsy";
 import {ToBeDeleted} from "../components/ToBeDeleted.ts";
-import {PreySystem} from "./PreySystem.ts";
+import {FleeingSystem} from "./FleeingSystem.ts";
+import {HuntingSystem} from "./HuntingSystem.ts";
 
-@system(s => s.after(PreySystem)) export class DeleterSystem extends System{
+@system(s => s.after(FleeingSystem, HuntingSystem)) export class DeleterSystem extends System{
     private entities = this.query(q => q.current.with(ToBeDeleted).usingAll.write);
 
     execute() {

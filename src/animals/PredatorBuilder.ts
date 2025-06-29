@@ -1,24 +1,26 @@
-import {World} from "@lastolivegames/becsy";
+import {ComponentType, World} from "@lastolivegames/becsy";
 import {Vector} from "../lib/Vector.ts";
 import {Position} from "../components/Position.ts";
 import {Velocity} from "../components/Velocity.ts";
 import {MaxSpeed} from "../components/MaxSpeed.ts";
-import {Renderable} from "../components/Viewable.ts";
+import {DotView} from "../components/DotView.ts";
 import {Predator} from "../components/Predator.ts";
 import {Acceleration} from "../components/Acceleration.ts";
 import {TargetPosition} from "../components/TargetPosition.ts";
-import {Reproduce} from "../components/Reproduce.ts";
-import {Decision} from "../components/Decision.ts";
+import {Energy} from "../components/Energy.ts";
 
 export default abstract class PredatorBuilder {
     protected world: World;
 
     protected abstract huntDistance: number;
 
+    protected abstract startingEnergy: number;
+    protected abstract energyLoss: number;
+
     protected abstract acceleration: number;
     protected abstract maxSpeed: number;
     protected abstract color: number[];
-    protected abstract Component: any;
+    protected abstract Component: ComponentType<any>;
 
     constructor(world: World) {
         this.world = world;
@@ -34,14 +36,12 @@ export default abstract class PredatorBuilder {
             Velocity, {value: [0, 0]},
             TargetPosition, {value: [NaN, NaN]},
             Predator, {
-                hunting: false,
                 huntDistance: this.huntDistance,
             },
-            Reproduce, {reproducing: false, energyCost: 0},
-            Decision, {free: true, feedChance: 0.5, reproduceChance: 0.5},
             MaxSpeed, {value: this.maxSpeed},
+            Energy, {value: this.startingEnergy, startingValue: this.startingEnergy, lossPerMovement: this.energyLoss},
             Acceleration, {value: this.acceleration},
-            Renderable, {color: this.color},
+            DotView, {color: this.color},
             this.Component
         );
     }

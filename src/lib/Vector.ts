@@ -4,6 +4,11 @@ export class Vector {
     x: number = 0;
     y: number = 0;
 
+    constructor(x: number = 0, y: number = 0) {
+        this.x = x;
+        this.y = y;
+    }
+
     add(that: Vector): void {
         this.x += that.x;
         this.y += that.y;
@@ -64,17 +69,6 @@ export class Vector {
 
     mag(): number {
         return Math.sqrt(this.x * this.x + this.y * this.y);
-    }
-
-    setMag(magnitude: number): void {
-        const length = this.mag();
-        if (length > 0) {
-            this.div(length);
-            this.multScalar(magnitude);
-        } else {
-            this.x = magnitude;
-            this.y = 0;
-        }
     }
 
     toString(): string {
