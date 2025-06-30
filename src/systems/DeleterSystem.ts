@@ -2,12 +2,14 @@ import {system, System} from "@lastolivegames/becsy";
 import {ToBeDeleted} from "../components/ToBeDeleted.ts";
 import {FleeingSystem} from "./FleeingSystem.ts";
 import {HuntingSystem} from "./HuntingSystem.ts";
+import {GrazingSystem} from "./GrazingSystem.ts";
+import {EnergySystem} from "./EnergySystem.ts";
 
 /**
  * System for removing entities marked for deletion
  * Runs after other systems have finished processing
  */
-@system(s => s.after(FleeingSystem, HuntingSystem)) 
+@system(s => s.after(FleeingSystem, HuntingSystem, GrazingSystem, EnergySystem))
 export class DeleterSystem extends System {
     // Query all entities marked for deletion
     private entities = this.query(q => q.current.with(ToBeDeleted).usingAll.write);
