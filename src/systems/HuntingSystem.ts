@@ -74,17 +74,17 @@ export class HuntingSystem extends System {
                 // Find closest prey within hunting distance
                 let closestPrey: Entity | null = null;
                 let closestDist = Infinity;
-                
+
                 for (const prey of preys) {
                     const preyPos = prey.read(Position).value;
                     const dist = predatorPos.dist(preyPos);
-                    
+
                     if (dist < closestDist && dist < predatorComponent.huntDistance) {
                         closestDist = dist;
                         closestPrey = prey;
                     }
                 }
-                
+
                 if (closestPrey) {
                     // Set target and move toward it
                     predatorComponent.target = closestPrey;
@@ -95,8 +95,13 @@ export class HuntingSystem extends System {
                     // Consume prey if close enough
                     if (distanceToPrey < 5) {
                         // Mark prey for deletion
-                        closestPrey.add(ToBeDeleted);
-                        
+                        try {
+                            closestPrey.add(ToBeDeleted);
+                        } catch (e) {
+                            continue;
+                        }
+
+
                         // Gain energy from consuming prey
                         predatorEnergy.value += closestPrey.read(Prey).energyValue;
                     }

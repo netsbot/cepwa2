@@ -8,7 +8,7 @@ import {MovementSystem} from "./MovementSystem.ts";
  */
 @system(s => s.after(MovementSystem)) export class EnergySystem extends System {
     // Query all entities with energy
-    private energyQuery = this.query(q => q.current.with(Energy).write);
+    private energyQuery = this.query(q => q.current.with(Energy).with(ToBeDeleted).write);
 
     // Minimum energy threshold before death
     private readonly minimumEnergyLevel = 0.05;

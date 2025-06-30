@@ -14,7 +14,7 @@ import {GrassBuilder} from "./environment/Grass.ts";
 import {GrazingSystem} from "./systems/GrazingSystem.ts";
 import {WanderSystem} from "./systems/WanderSystem.ts";
 import {EnergySystem} from "./systems/EnergySystem.ts";
-import { RNG } from './lib/RNG.ts';
+import {RNG} from './lib/RNG.ts';
 
 // Group systems by their logical purpose
 const lifecycleGroup = System.group(HuntingSystem, FleeingSystem, GrazingSystem, WanderSystem);
@@ -30,14 +30,42 @@ let world = await World.create({
     ]
 });
 
-// Initialize the world with entities based on slider values
+// FPS counter system
+let lastFpsTime = 0;
+let lastFrameCount = 0;
+
+// Initialize the world with entities based on input values
 const initializeWorld = async () => {
     RNG.setSeed(seedInput.value);
 
-    const chickCount = parseInt(chicksSlider.value);
-    const pigCount = parseInt(pigsSlider.value);
-    const wolfCount = parseInt(wolvesSlider.value);
-    const grassCount = parseInt(grassSlider.value);
+    const chickCount = parseInt(chicksInput.value);
+    const pigCount = parseInt(pigsInput.value);
+    const wolfCount = parseInt(wolvesInput.value);
+    const grassCount = parseInt(grassInput.value);
+
+    // Validate input values
+    if (isNaN(chickCount) || chickCount < 0) {
+        alert("Invalid number of chicks");
+        return;
+    }
+
+    if (isNaN(pigCount) || pigCount < 0) {
+        alert("Invalid number of pigs");
+        return;
+    }
+
+    if (isNaN(wolfCount) || wolfCount < 0) {
+        alert("Invalid number of wolves");
+        return;
+    }
+
+    if (isNaN(grassCount) || grassCount < 0) {
+        alert("Invalid number of grass patches");
+        return;
+    }
+
+    console.log(`Initializing world with ${chickCount} chicks, ${pigCount} pigs, ${wolfCount} wolves, and ${grassCount} grass patches.`);
+
 
     // Initialize entity builders
     const chickBuilder = new ChickBuilder(world);
@@ -65,29 +93,13 @@ const initializeWorld = async () => {
 
 
 // UI Controls setup
-const pigsSlider = document.getElementById('pigs-slider') as HTMLInputElement;
-const pigsValue = document.getElementById('pigs-value') as HTMLSpanElement;
-pigsSlider.addEventListener('input', () => {
-    pigsValue.textContent = pigsSlider.value;
-});
+const pigsInput = document.getElementById('pigs-input') as HTMLInputElement;
+const wolvesInput = document.getElementById('wolves-input') as HTMLInputElement;
+const chicksInput = document.getElementById('chicks-input') as HTMLInputElement;
+const grassInput = document.getElementById('grass-input') as HTMLInputElement;
 
-const wolvesSlider = document.getElementById('wolves-slider') as HTMLInputElement;
-const wolvesValue = document.getElementById('wolves-value') as HTMLSpanElement;
-wolvesSlider.addEventListener('input', () => {
-    wolvesValue.textContent = wolvesSlider.value;
-});
-
-const chicksSlider = document.getElementById('chicks-slider') as HTMLInputElement;
-const chicksValue = document.getElementById('chicks-value') as HTMLSpanElement;
-chicksSlider.addEventListener('input', () => {
-    chicksValue.textContent = chicksSlider.value;
-});
-
-const grassSlider = document.getElementById('grass-slider') as HTMLInputElement;
-const grassValue = document.getElementById('grass-value') as HTMLSpanElement;
-grassSlider.addEventListener('input', () => {
-    grassValue.textContent = grassSlider.value;
-});
+// Initialize FPS counter
+const fpsCounter = document.getElementById('fps-counter') as HTMLParagraphElement;
 
 // Setup random seed
 const seedInput = document.getElementById('seed-input') as HTMLInputElement;
@@ -127,9 +139,17 @@ const main = async (p: p5) => {
         // Execute ECS systems in sequence
         await frame.begin();
         await frame.execute(lifecycleGroup);
+
         await frame.execute(utilityGroup);
         await frame.execute(renderGroup);
         await frame.end();
+
+        if (lastFpsTime + 1000 < Date.now()) {
+            const fps = Math.round((p.frameCount - lastFrameCount) / ((Date.now() - lastFpsTime) / 1000));
+            fpsCounter.textContent = `FPS: ${fps}`;
+            lastFpsTime = Date.now();
+            lastFrameCount = p.frameCount;
+        }
     };
 };
 
@@ -145,6 +165,7 @@ startBtn?.addEventListener("click", async () => {
     }
     running = true;
     startBtn.disabled = true;
+    stopBtn.disabled = false;
 });
 
 // Stop button event handler
@@ -152,6 +173,7 @@ const stopBtn = document.getElementById("stop-btn") as HTMLButtonElement;
 stopBtn?.addEventListener("click", () => {
     running = false;
     startBtn.disabled = false;
+    stopBtn.disabled = true;
 });
 
 

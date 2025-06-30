@@ -8,6 +8,7 @@ import {Grass} from "../environment/Grass.ts";
 import {Chick} from "../animals/Chick.ts";
 import {Vegetation} from "../components/Vegetation.ts";
 import {HuntingSystem} from "./HuntingSystem.ts";
+import {Pig} from "../animals/Pig.ts";
 
 /**
  * System for prey grazing behavior
@@ -18,6 +19,7 @@ export class GrazingSystem extends System {
     private relationships = new Map<ComponentType<any>, ComponentType<any>[]>(
         [
             [Chick, [Grass]], // Chicks eat grass
+            [Pig, [Grass]], // Pigs eat grass
         ]
     );
 
@@ -77,7 +79,7 @@ export class GrazingSystem extends System {
                 for (const veg of vegetation) {
                     const vegPos = veg.read(Position).value;
                     const dist = preyPos.dist(vegPos);
-                    
+
                     if (dist < closestDist && dist < preyComponent.grazingDistance) {
                         closestDist = dist;
                         closestVegetation = veg;
@@ -96,7 +98,7 @@ export class GrazingSystem extends System {
                             // Mark vegetation for deletion
                             closestVegetation.add(ToBeDeleted);
                         } catch (e) {
-                            return;
+                            continue;
                         }
                         // Gain energy from consuming vegetation
                         preyEnergy.value += closestVegetation.read(Vegetation).energyValue;
