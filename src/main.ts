@@ -1,4 +1,5 @@
 import './style.css'
+// @ts-ignore
 import p5 from 'p5';
 
 import {System, World} from "@lastolivegames/becsy";
@@ -15,6 +16,9 @@ import {GrazingSystem} from "./systems/GrazingSystem.ts";
 import {WanderSystem} from "./systems/WanderSystem.ts";
 import {EnergySystem} from "./systems/EnergySystem.ts";
 import {RNG} from './lib/RNG.ts';
+
+// Disable FES
+p5.disableFriendlyErrors = true;
 
 // Group systems by their logical purpose
 const lifecycleGroup = System.group(HuntingSystem, FleeingSystem, GrazingSystem, WanderSystem);

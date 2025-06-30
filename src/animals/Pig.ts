@@ -11,6 +11,8 @@ import MesopredatorBuilder from "./MesopredatorBuilder.ts";
  * Both predator and prey (mesopredator)
  */
 export class PigBuilder extends MesopredatorBuilder {
+    protected name = "pig";
+
     // Hunting properties
     protected huntDistance = 200;  // Medium detection range
     

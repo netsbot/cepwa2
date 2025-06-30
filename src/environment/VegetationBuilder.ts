@@ -9,6 +9,8 @@ import {SpriteView} from "../components/SpriteView.ts";
 export abstract class VegetationBuilder {
     protected world: World;
 
+    protected abstract name: string;
+
     // Nutrition properties
     protected abstract energyValue: number;
     
@@ -37,7 +39,7 @@ export abstract class VegetationBuilder {
             
             // Visual component
             SpriteView, {
-                value: this.Component.name.toLowerCase(), 
+                value: this.name,
                 width: 32
             },
             

@@ -10,6 +10,8 @@ import {component} from "@lastolivegames/becsy";
  * Builder for Grass vegetation entities
  */
 export class GrassBuilder extends VegetationBuilder {
+    protected name = "grass";
+
     // Energy properties
     protected energyValue: number = 1;
     

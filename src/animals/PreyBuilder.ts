@@ -14,6 +14,7 @@ import {SpriteView} from "../components/SpriteView.ts";
  */
 export default abstract class PreyBuilder {
     protected world: World;
+    protected abstract name: string;
 
     // Behavior properties
     protected abstract fleeDistance: number;
@@ -72,7 +73,7 @@ export default abstract class PreyBuilder {
             
             // Visual component
             SpriteView, {
-                value: this.Component.name.toLowerCase(), 
+                value: this.name,
                 width: 32
             },
             

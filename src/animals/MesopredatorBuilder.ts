@@ -15,6 +15,7 @@ import {SpriteView} from "../components/SpriteView.ts";
  */
 export default abstract class MesopredatorBuilder {
     protected world: World;
+    protected abstract name: string;
 
     // Hunting properties
     protected abstract huntDistance: number;
@@ -82,7 +83,7 @@ export default abstract class MesopredatorBuilder {
             
             // Visual component
             SpriteView, {
-                value: this.Component.name.toLowerCase(), 
+                value: this.name,
                 width: 32
             },
             

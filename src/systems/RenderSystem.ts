@@ -1,3 +1,4 @@
+// @ts-ignore
 import p5 from "p5";
 import {System, system} from "@lastolivegames/becsy";
 import {DotView} from "../components/DotView.ts";
@@ -5,6 +6,11 @@ import {Position} from "../components/Position.ts";
 import {BoxView} from "../components/BoxView.ts";
 import {DeleterSystem} from "./DeleterSystem.ts";
 import {SpriteView} from "../components/SpriteView.ts";
+
+import grassImage from "/assets/grass.png";
+import chickImage from "/assets/chick.png";
+import pigImage from "/assets/pig.png";
+import wolfImage from "/assets/wolf.png";
 
 @system(s => s.after(DeleterSystem)) 
 export class RenderSystem extends System {
@@ -22,10 +28,10 @@ export class RenderSystem extends System {
 
     // Asset registry
     static assetsToLoad = new Map<string, string>([
-        ["grass", "/assets/grass.png"],
-        ["chick", "/assets/chick.png"],
-        ["pig", "/assets/pig.png"],
-        ["wolf", "/assets/wolf.png"],
+        ["grass", grassImage],
+        ["chick", chickImage],
+        ["pig", pigImage],
+        ["wolf", wolfImage],
     ]);
 
     static loadedAssets = new Map<string, p5.Image>();
@@ -33,6 +39,8 @@ export class RenderSystem extends System {
     // Load all sprites at startup
     static async loadAssets() {
         for (const [name, path] of this.assetsToLoad.entries()) {
+            console.log(`Loading asset: ${name} from ${path}`);
+
             const image = await RenderSystem.p.loadImage(path);
             this.loadedAssets.set(name, image);
         }

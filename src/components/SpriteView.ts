@@ -1,5 +1,7 @@
 import {component, field} from "@lastolivegames/becsy";
 
+
+
 /**
  * Component for rendering sprite images
  */

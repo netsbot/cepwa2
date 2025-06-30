@@ -10,6 +10,8 @@ import PredatorBuilder from "./PredatorBuilder.ts";
  * Builder for Wolf entities - apex predators in the ecosystem
  */
 export class WolfBuilder extends PredatorBuilder {
+    protected name = "wolf";
+
     // Hunting properties
     protected huntDistance = 1000;  // Can detect prey from far away
 

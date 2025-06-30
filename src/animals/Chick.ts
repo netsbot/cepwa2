@@ -12,6 +12,8 @@ export class Chick {
  * Builder for Chick entities - lowest in the food chain
  */
 export class ChickBuilder extends PreyBuilder {
+    protected name = "chick";
+
     // Behavior properties
     protected fleeDistance = 200;     // Short flee distance
     protected grazingDistance = 200;   // Short grazing distance
