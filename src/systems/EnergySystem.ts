@@ -19,7 +19,10 @@ import {MovementSystem} from "./MovementSystem.ts";
             
             // Mark entity for deletion if energy is too low
             if (energy.value <= this.minimumEnergyLevel) {
-                entity.add(ToBeDeleted);
+                try {
+                    entity.add(ToBeDeleted);
+                } catch (e) {
+                }
             }
         }
     }

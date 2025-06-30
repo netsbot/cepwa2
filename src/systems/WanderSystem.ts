@@ -28,11 +28,6 @@ export class WanderSystem extends System {
         let changedWanderTime = false;
 
         for (const entity of this.allAnimalsQuery.current) {
-            // Only wander when fully energized
-            if (entity.read(Energy).value < entity.read(Energy).startingValue) {
-                continue;
-            }
-
             // Check if it's time to change direction
             if (this.lastWanderTime + this.wanderInterval < this.time) {
                 const position = entity.read(Position).value;
