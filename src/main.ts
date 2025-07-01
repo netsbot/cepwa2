@@ -31,7 +31,8 @@ let world = await World.create({
         lifecycleGroup,
         utilityGroup,
         renderGroup
-    ]
+    ],
+    maxEntities: 20000,
 });
 
 // FPS counter system

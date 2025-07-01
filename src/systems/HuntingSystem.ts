@@ -94,7 +94,6 @@ export class HuntingSystem extends System {
 
                     // Consume prey if close enough
                     if (distanceToPrey < 5) {
-                        // Mark prey for deletion
                         try {
                             closestPrey.add(ToBeDeleted);
                         } catch (e) {

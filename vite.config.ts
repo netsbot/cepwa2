@@ -1,10 +1,13 @@
-import { defineConfig } from 'vite';
+import {defineConfig} from 'vite';
 
 export default defineConfig({
     build: {
         target: 'esnext', //browsers can handle the latest ES features
-        sourcemap: "inline", //inline source maps for easier debugging
+        sourcemap: false, //no source maps in production for smaller files
         assetsInlineLimit: 0, // Prevents all assets from being inlined
     },
-    base: "/cepwa2/"
+    resolve: {
+        alias: [{find: "@lastolivegames/becsy", replacement: "@lastolivegames/becsy/perf"}]
+    },
+    base: "/cepwa2/",
 })
